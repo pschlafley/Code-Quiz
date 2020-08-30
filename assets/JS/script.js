@@ -69,13 +69,15 @@ function quizTimer() {
 // when button is clicked then questions and answers appear
   function getQuestion() {
     var question = questions[currentQuestion];
+
     document.getElementById("question").textContent = question.question;
-    
+
+    document.getElementById("answer-list").textContent = question.choices;
+
     for (i = 0; i < question.choices.length; i++) {
         var listItemEl = document.createElement("li");
         listItemEl.textContent = question.choices[i];
         answerList.appendChild(listItemEl);
-        listItemEl = answerList.textContent = question.choices;
     }    
     currentQuestion++;
     currentQuestion.choices++;
