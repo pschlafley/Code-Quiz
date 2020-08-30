@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.timer-display {
+    margin: 0 25px;
+    font-style: italic;
+
+}
+
+.highscore {
+    color: blue;
+    text-decoration: none;
+    margin: 0 15px;
+    font-style: italic;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+main h1 {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+main p {
+    margin: 0 25px;
+    font-size: 18px;
+}
+ 
+ .quiz-wrapper {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    margin-top: 200px;
+} 
+
+
+button {
+    background-color: purple;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    padding: 15px 32px;
+    margin: 10px 20px;
+    width: 15%;
+    height: 50px;
+    justify-content: center;
+}
+
+
+
+

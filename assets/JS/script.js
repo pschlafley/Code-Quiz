@@ -1,10 +1,9 @@
 var startBtn = document.getElementById("start-button");
-var timerClock = document.getElementById("quiz-timer");
+var timerCountdown = document.getElementById("quiz-timer");
 var answerList = document.getElementById("answer-list");
 var quizSection = document.getElementById("quiz-wrapper");
 
 var currentQuestion = 0;
-question[currentQuestion];
 
 var questions = [
     {
@@ -34,6 +33,10 @@ var questions = [
     },
 ];
 
+function startQuiz() {
+    quizTimer();
+};
+
 
 
 // timer starts when button is clicked
@@ -41,22 +44,39 @@ function quizTimer() {
     var timeLeft = 60;
 
     var timeInterval = setInterval(function() {
-        if (timeLeft > 0) {
-            timerClock.textContent = timeLeft;
+        if (timeLeft >= 0) {
+            timerCountdown.textContent = timeLeft;
             timeLeft --;
         } else {
             clearInterval(timeInterval);
         }
     }, 1000);
+
+    document.getElementById("quiz-timer").style.color = "red";
+
+    getQuestion();
 };
+
+// when button is clicked then questions and answers appear
+  function getQuestion() {
+    var question = questions[currentQuestion];
+    document.getElementById("question").textContent = question.question;
+    for (i = 0; i < question.choices.length; i++) {
+        var listItemEl = document.createElement("li");
+        listItemEl.textContent = question.choices[i];
+        answerList.appendChild(listItemEl);
+    }    
+};
+
+ // when user answers a question then the next question appears
 
 
 // click the start button to run the quizTimer function
-startBtn.addEventListener("click", quizTimer);
+startBtn.addEventListener("click", startQuiz);
 
 
-// WHEN I answer a question
-// THEN I am presented with another question
+
+
 // WHEN I answer a question incorrectly
 // THEN time is subtracted from the clock
 // WHEN all questions are answered or the timer reaches 0
