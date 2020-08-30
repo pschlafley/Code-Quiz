@@ -75,6 +75,7 @@ function quizTimer() {
         var listItemEl = document.createElement("li");
         listItemEl.textContent = question.choices[i];
         answerList.appendChild(listItemEl);
+        listItemEl = answerList.textContent = question.choices;
     }    
     currentQuestion++;
     currentQuestion.choices++;
