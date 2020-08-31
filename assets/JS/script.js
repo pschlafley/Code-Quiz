@@ -10,6 +10,7 @@ var startBtn = document.getElementById("start-button");
 var timerCountdown = document.getElementById("quiz-timer");
 var answerList = document.getElementById("answer-list");
 var quizSection = document.getElementById("quiz-wrapper");
+var buttonWrapper = document.getElementById("button-wrapper");
 var timeLeft = 59;
 var timeInterval;
 var score = timeLeft;
@@ -46,7 +47,6 @@ var questions = [
 function startQuiz() {
     quizTimer();
     getQuestion();
-    userPick();
 };
 
 
@@ -83,20 +83,20 @@ function quizTimer() {
 };
 
 function userPick() {
-        var answer = question.correct;
-
-        if (answer) {
-            var alertCorrect = document.createElement("span");
-            alertCorrect.textContent = "Correct!"
-            var userScore = score + 10;
-            userScore++;
-        } else {
-            var alertWrong = document.createElement("span");
-            alertWrong.textContent = "Wrong";
-            timeLeft = timeLeft - 10;
-            timeLeft--; 
-        }
-};
+    var question = questions[currentQuestion];
+    if (question === this.correct) {
+        var correctAlert = document.createElement("p");
+        correctAlert.textContent = "Correct!";
+        buttonWrapper.innerHTML = "";
+        buttonWrapper.appendChild(correctAlert);
+        setTimeout(function(){correctAlert.textContent = ""}, 1500);
+    } else if (question.correct < this.textContent || question.correct > this.textContent) {
+        var wrongAlert = document.createElement("p");
+    wrongAlert.textContent = "Incorrect!";
+    buttonWrapper.appendChild(wrongAlert);
+    setTimeout(function(){wrongAlert.textContent = ""}, 1500);
+    }
+}; 
 
 function endQuiz() {
     // when time hits zero end the quiz
