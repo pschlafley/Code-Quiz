@@ -5,16 +5,24 @@
 // WHEN the game is over
 // THEN I can save my initials and score
 
-
+const instructions = document.getElementById('quiz-instructions');
 var startBtn = document.getElementById("start-button");
+const btnWrapper = document.getElementById('button-wrapper');
 var timerCountdown = document.getElementById("quiz-timer");
 var answerList = document.getElementById("answer-list");
 var quizSection = document.getElementById("quiz-wrapper");
-var buttonWrapper = document.getElementById("button-wrapper");
 var timeLeft = 59;
 var timeInterval;
-var score = timeLeft;
+var score = 0;
 var currentQuestion = 0;
+let userForm = document.querySelector('#user-form');
+let userName = document.getElementById('uName');
+const userFormSubmit = document.getElementById('submitBtn');
+const highScores = document.getElementById('high-scores');
+const alertWrap = document.getElementById('alert-wrapper');
+
+
+userForm.style.visibility = 'hidden';
 
 var questions = [
     {
@@ -44,19 +52,45 @@ var questions = [
     },
 ];
 
+
+const myStorage = window.localStorage;
+
+const users = JSON.parse(myStorage.getItem('user')) || [];
+
+const user = {
+    uName: "",
+};
+
+function createUser() {
+    user.uName = userName.value;
+
+    users.push(user);
+
+    myStorage.setItem("user", JSON.stringify(users));
+};
+
+
+let quizStarted = false;
+
 function startQuiz() {
+    quizStarted = true;
+    if (quizStarted === true) {
+        instructions.style.display = 'none';
+        startBtn.style.display = 'none';
+    }
     quizTimer();
     getQuestion();
 };
 
 
+
 // timer starts when button is clicked
 function quizTimer() {
 
-    timeInterval = setInterval(function() {
-        if (timeLeft >= 0) {
+    timeInterval = setInterval(function () {
+        if (timeLeft > 0) {
             timerCountdown.textContent = timeLeft;
-            timeLeft --;
+            timeLeft--;
         } else {
             clearInterval(timeInterval);
         }
@@ -66,47 +100,98 @@ function quizTimer() {
 };
 
 // when button is clicked then questions and answers appear
-  function getQuestion() {
+function getQuestion() {
     var question = questions[currentQuestion];
 
-    document.getElementById("question").textContent = question.question;
+    if (!question) {
+        endQuiz()
+    } else {
+        document.getElementById("question").textContent = question.question;
+    }
 
-    answerList.textContent = question.choices[i];
+    if (!question) {
+        endQuiz();
+    }
 
-    for (var i = 0; i < question.choices.length; i++) {
-        var listItemEl = document.createElement("li");
-        listItemEl.textContent = question.choices[i];
-        answerList.appendChild(listItemEl);
-    }    
-    currentQuestion++;
-    currentQuestion.choices++;    
+    try {
+        if (question) throw answerList.textContent = question.choices[i];
+    }
+    catch (err) {
+        console.log(err);
+    };
+
+
+    try {
+        for (var i = 0; i < question.choices.length; i++) {
+            var listItemEl = document.createElement("li");
+            listItemEl.style.padding = "5px";
+            listItemEl.style.listStyle = "none";
+            listItemEl.textContent = question.choices[i];
+            answerList.appendChild(listItemEl);
+            listItemEl.addEventListener('click', userPick);
+        }
+    }
+    catch (err) {
+        console.log('There are no more questions');
+    }
+
+    currentQuestion.choices++;
 };
 
 function userPick() {
     var question = questions[currentQuestion];
-    if (question === this.correct) {
+
+    if (question.correct === this.textContent) {
         var correctAlert = document.createElement("p");
         correctAlert.textContent = "Correct!";
-        buttonWrapper.innerHTML = "";
-        buttonWrapper.appendChild(correctAlert);
-        setTimeout(function(){correctAlert.textContent = ""}, 1500);
+        correctAlert.style.color = 'green';
+        alertWrap.innerHTML = "";
+        alertWrap.appendChild(correctAlert);
+
+        setTimeout(function () { correctAlert.textContent = "" }, 1000);
+
+        score = score + 20;
+        myStorage.setItem("score", score);
+
     } else if (question.correct < this.textContent || question.correct > this.textContent) {
         var wrongAlert = document.createElement("p");
-    wrongAlert.textContent = "Incorrect!";
-    buttonWrapper.appendChild(wrongAlert);
-    setTimeout(function(){wrongAlert.textContent = ""}, 1500);
+        wrongAlert.textContent = "Incorrect!";
+        wrongAlert.style.color = 'red';
+        alertWrap.appendChild(wrongAlert);
+
+        setTimeout(function () { wrongAlert.textContent = "" }, 1000);
+        score = score + 0;
     }
-}; 
+    currentQuestion++;
+};
 
 function endQuiz() {
     // when time hits zero end the quiz
     clearInterval(timeInterval);
-    
+    userForm.style.visibility = 'visible';
+    quizSection.style.display = 'none';
 };
 
+
+function getHighScores() {
+    const localUsr = JSON.parse(myStorage.getItem('user'));
+    const scores = [];
+
+    localUsr.forEach(user => {
+        scores.push(user.uName)
+        const lastScore = myStorage.getItem('score');
+        scores.push(lastScore);
+        console.log(scores);
+    });
+};
 
 // click the start button to run the quizTimer function
 startBtn.addEventListener("click", startQuiz);
 
 // make the created "li" clickable
 answerList.addEventListener("click", getQuestion);
+
+// event handle to create a user
+userFormSubmit.addEventListener('click', createUser);
+
+highScores.addEventListener('click', getHighScores);
