@@ -172,6 +172,8 @@ function endQuiz() {
     quizSection.style.display = 'none';
 };
 
+const showModal = document.querySelector('#myModal');
+const modalContent = document.querySelector('#modal-content');
 
 function getHighScores() {
     const localUsr = JSON.parse(myStorage.getItem('user'));
@@ -181,9 +183,25 @@ function getHighScores() {
         scores.push(user.uName)
         const lastScore = myStorage.getItem('score');
         scores.push(lastScore);
-        console.log(scores);
     });
+
+    showModal.style.display = 'block';
+
+    const currentHighScore = scores[scores.length - 1];
+    const currentChamp = scores[scores.length - 2];
+
+    modalContent.textContent = currentChamp + ': ' + currentHighScore;
+    console.log(modalContent);
+
 };
+
+const closeBtn = document.querySelector('.close');
+
+function closeModal() {
+    showModal.style.display = 'none';
+}
+
+closeBtn.addEventListener('click', closeModal);
 
 // click the start button to run the quizTimer function
 startBtn.addEventListener("click", startQuiz);
